@@ -1,0 +1,21 @@
+<% layout('/layout/boilerplate') %>
+
+<h2><b>Title: <%= data.title %></b></h2>
+<br>
+<h3>Description: <%= data.description %></h3>
+<br>
+<h3>Location: <%= data.location %></h3>
+<br>
+<h3>Price: ₹<%= data.price.toLocaleString("en-IN") %></h3>
+<br>
+<h3>Image: 
+    <img src="<%= data.image.url %>" alt="<%= data.title %>">
+</h3>
+<form action="/listing/<%=data.id%>/edit" method="get">
+    <button type="submit">edit </button>
+</form>
+<br>
+<br>
+<form method="POST" action="/listing/<%=data.id%>?_method=DELETE">
+    <button type="submit">Delete</button>
+</form>

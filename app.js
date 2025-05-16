@@ -7,6 +7,7 @@ const path = require("path");
 const ejsmate = require("ejs-mate");
 const methodOverride = require("method-override");
 
+
 // Set up ejs-mate as the engine first
 app.engine('ejs', ejsmate);
 app.set("view engine", "ejs");
@@ -53,7 +54,7 @@ app.get("/listing", async(req, res) => {
 
 // new route 
 app.get("/listing/new", (req, res) => {
-    res.render("listing/new.ejs");
+    res.render("listing/new.ejs"); 
 });
 
 //show route 

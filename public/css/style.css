@@ -1,0 +1,205 @@
+
+/* Navbar icon styling */
+.fa-compass {
+    color: darkred;
+    font-size: 2rem;
+}
+
+/* Footer styling */
+.f-info {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    background-color: #f8f9fa;
+    padding: 2rem 0;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    border-top: 1px solid #dee2e6;
+}
+
+/* Company name styling */
+.f-info > div:nth-child(2) {
+    font-weight: 500;
+    color: #343a40;
+    margin: 1rem 0;
+    font-size: 1.1rem;
+}
+
+/* Social icons container */
+.f-info-socials {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+/* Individual social icons */
+.f-info-socials i {
+    margin: 0 1rem;
+    font-size: 1.5rem;
+    color: #6c757d;
+    transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.f-info-socials i:hover {
+    color: #0d6efd;
+    transform: translateY(-3px);
+}
+
+/* Footer links container */
+.f-info-linkes {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 1rem;
+}
+
+/* Individual footer links */
+.f-info-linkes a {
+    color: #495057;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    transition: color 0.3s ease;
+}
+
+.f-info-linkes a:hover {
+    color: #0d6efd;
+    text-decoration: underline;
+}
+
+/* Responsive adjustments */
+@media (min-width: 768px) {
+    .f-info {
+        flex-direction: row;
+        padding: 1.5rem 2rem;
+        height: 5rem;
+    }
+    
+    .f-info-socials, .f-info-linkes {
+        width: auto;
+        margin: 0;
+    }
+    
+    .f-info > div:nth-child(2) {
+        margin: 0;
+    }
+}
+.text{
+    text-align: center;
+}
+/* Card styling */
+.card {
+    border: none !important;
+    margin-bottom: 2rem;
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    cursor: pointer;
+}
+
+/* Ensure text colors don't change when wrapped in a link */
+a .listing-title {
+    color: #333;
+}
+
+a:hover .listing-title {
+    color: #0d6efd;
+}
+
+a .listing-price {
+    color: #0d6efd;
+}
+
+a .text-muted {
+    color: #6c757d !important;
+}
+
+.card-img-top {
+    border-radius: 1rem 1rem 0 0 !important;
+    width: 100% !important;
+    height: 200px !important;
+    object-fit: cover !important;
+}
+
+.card-body {
+    padding: 1rem !important;
+    background-color: white;
+}
+
+.card-text {
+    color: #333;
+}
+
+.listing-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+.listing-price {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #0d6efd;
+}
+
+/* Listings container */
+.listings-container {
+    padding: 2rem 0;
+}
+
+.listings-heading {
+    margin-bottom: 2rem;
+    color: #333;
+    font-weight: 600;
+}
+
+
+/* Show page styling */
+.show-img {
+    height: 400px;
+    object-fit: cover;
+    width: 100%;
+}
+
+.card-title {
+    font-weight: 700;
+    color: #333;
+}
+
+.list-group-item p {
+    margin-bottom: 0;
+}
+
+.btn-success, .btn-danger {
+    padding: 0.5rem 1.5rem;
+}
+
+.btn-success {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+.btn-success:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+    border-color: #bd2130;
+}
+ 

@@ -1,23 +1,48 @@
 <% layout("/layout/boilerplate") %>
-
+<h1 class="text">Edit Listing</h1>
+<br><br>
 <form method="POST" action="/listing/<%=getdata.id%>?_method=PUT">
-    <label for="title">Title</label>
-    <input type="text" name="listing[title]" id="title" value="<%= getdata.title %>">
-    <br>
-    <label for="description">Description</label>
-    <input type="text" name="listing[description]" id="description" value="<%= getdata.description %>">
-    <br>
-    <label for="location">Location</label>
-    <input type="text" name="listing[location]" id="location"value ="<%= getdata.location %>">
-    <br>
-    <label for="price">Price</label>
-    <input type="number" name="listing[price]" id="price" value="<%= getdata.price %>">
-    <br>
-    <label for="image">Image</label>
-    <input type="text" name="listing[image]" id="image" value="enter your new Image url">
-    <br>
-    <label for="country">Country</label>
-    <input type="text" name="listing[country]" id="country" value="<%= getdata.country %>">
-    <br>
-    <button type="submit">edit</button>
+    <div class="row-cols-1">
+        <div class="col-8 offset-2">
+            <div class="mb-3">
+                <label for="title" class="form-label">Title</label>
+                <input type="text" name="listing[title]" id="title" value="<%= getdata.title %>" class="form-control">
+            </div>
+            
+            <br>
+            <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <input type="text" name="listing[description]" id="description" value="<%= getdata.description %>" class="form-control">
+            </div>
+            
+            <br>
+            <div class="mb-3">
+                <label for="location" class="form-label">Location</label>
+                <input type="text" name="listing[location]" id="location" value="<%= getdata.location %>" class="form-control">
+            </div>
+            
+            <br>
+            <div class="row">
+                <div class="mb-3 col-md-4">
+                    <label for="price" class="form-label">Price</label>
+                    <input type="number" name="listing[price]" id="price" value="<%= getdata.price %>" class="form-control">
+                </div>
+                <div class="mb-3 col-md-8">
+                    <label for="country" class="form-label">Country</label>
+                    <input type="text" name="listing[country]" id="country" value="<%= getdata.country %>" class="form-control">
+                </div>
+            </div>
+            
+            <br>
+            <div class="mb-3">
+                <label for="image" class="form-label">Image</label>
+                <input type="text" name="listing[image]" id="image" placeholder="enter your new Image url" class="form-control">
+            </div>
+            
+            <br>
+            <button type="submit" class="btn btn-dark">Update</button>
+            <br>
+            <br>
+        </div>
+    </div>
 </form>

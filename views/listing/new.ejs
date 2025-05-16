@@ -1,23 +1,50 @@
 <% layout("/layout/boilerplate") %>
-
+<h1 class="text"> Create new list </h1>
+<br><br>
 <form action="/listing" method="post">
-    <label for="title">Title</label>
-    <input type="text" name="listing[title]" id="title" placeholder="Enter the title">
+    <div class="row-cols-1">
+
+   <div class="col-8  offset-2" >
+    <div class="mb-3">
+        <label for="title" class="form-label">Title</label>
+        <input type="text" name="listing[title]" id="title" placeholder="Enter the title" class="form-control">
+    </div>
+   
     <br>
-    <label for="description">Description</label>
-    <input type="text" name="listing[description]" id="description" placeholder="write something about place">
+    <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+    <input type="text" name="listing[description]" id="description" placeholder="write something about place" class="form-control">
+    </div>
     <br>
-    <label for="location">Location</label>
-    <input type="text" name="listing[location]" id="location" placeholder="enter the location">
+    <div class="mb-3">
+        <label for="location" class="form-label">Location</label>
+    <input type="text" name="listing[location]" id="location" placeholder="enter the location" class="form-control">
+    </div>
     <br>
-    <label for="price">Price</label>
-    <input type="number" name="listing[price]" id="price" placeholder="price enter here">
+    <div class="row">
+        <div class="mb-3 col-md-4">
+            <label for="price" class="form-label">Price</label>
+        <input type="number" name="listing[price]" id="price" placeholder="price enter here" class="form-control">
+        </div>
+        <div class="mb-3 col-md-8">
+            <label for="conutry" class="form-label" >Conutry</label>
+            <input type="text" name ="listing[conutry]" id="conutry" placeholder="enter your country name " class="form-control">
+           </div>
+    </div>
+    
     <br>
-    <label for="image">Image</label>
-    <input type="text" name="listing[image]" id="image" placeholder="enter your Image url">
+    <div class="mb-3">
+        <label for="image" class="form-label">Image</label>
+    <input type="text" name="listing[image]" id="image" placeholder="enter your Image url" class="form-control">
+
+    </div>
+    
     <br>
-    <label for="conutry">Conutry</label>
-    <input type="text" name ="listing[conutry]" id="conutry" placeholder="enter your country name ">
+   
+    
+    <button type="submit" class="btn btn-dark">submit</button>
     <br>
-    <button type="submit">submit</button>
+    <br>
 </form>
+</div> 
+</div>

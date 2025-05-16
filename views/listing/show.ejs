@@ -1,21 +1,29 @@
 <% layout('/layout/boilerplate') %>
 
-<h2><b>Title: <%= data.title %></b></h2>
-<br>
-<h3>Description: <%= data.description %></h3>
-<br>
-<h3>Location: <%= data.location %></h3>
-<br>
-<h3>Price: ₹<%= data.price.toLocaleString("en-IN") %></h3>
-<br>
-<h3>Image: 
-    <img src="<%= data.image.url %>" alt="<%= data.title %>">
-</h3>
-<form action="/listing/<%=data.id%>/edit" method="get">
-    <button type="submit">edit </button>
-</form>
-<br>
-<br>
-<form method="POST" action="/listing/<%=data.id%>?_method=DELETE">
-    <button type="submit">Delete</button>
-</form>
+<div class="row mt-3">
+  <div class="col-8 offset-2">
+    <div class="card mb-3">
+      <img src="<%= data.image.url %>" class="card-img-top show-img" alt="<%= data.title %>">
+      <div class="card-body">
+        <h2 class="card-title"><%= data.title %></h2>
+        <p class="card-text text-muted"><i class="fa-solid fa-location-dot"></i> <%= data.location %>, <%= data.country %></p>
+      </div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+          <p class="card-text"><%= data.description %></p>
+        </li>
+        <li class="list-group-item">
+          <p class="card-text fw-bold">₹<%= data.price.toLocaleString("en-IN") %> / night</p>
+        </li>
+      </ul>
+      <div class="card-body d-flex">
+        <form action="/listing/<%=data.id%>/edit" method="get" class="me-2">
+          <button type="submit" class="btn btn-success">Edit</button>
+        </form>
+        <form method="POST" action="/listing/<%=data.id%>?_method=DELETE">
+          <button type="submit" class="btn btn-danger">Delete</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,48 +1,78 @@
 <% layout("/layout/boilerplate") %>
-<h1 class="text">Edit Listing</h1>
-<br><br>
-<form method="POST" action="/listing/<%=getdata.id%>?_method=PUT">
-    <div class="row-cols-1">
-        <div class="col-8 offset-2">
-            <div class="mb-3">
-                <label for="title" class="form-label">Title</label>
-                <input type="text" name="listing[title]" id="title" value="<%= getdata.title %>" class="form-control">
-            </div>
-            
-            <br>
-            <div class="mb-3">
-                <label for="description" class="form-label">Description</label>
-                <input type="text" name="listing[description]" id="description" value="<%= getdata.description %>" class="form-control">
-            </div>
-            
-            <br>
-            <div class="mb-3">
-                <label for="location" class="form-label">Location</label>
-                <input type="text" name="listing[location]" id="location" value="<%= getdata.location %>" class="form-control">
-            </div>
-            
-            <br>
-            <div class="row">
-                <div class="mb-3 col-md-4">
-                    <label for="price" class="form-label">Price</label>
-                    <input type="number" name="listing[price]" id="price" value="<%= getdata.price %>" class="form-control">
+    <h1 class="text">Edit Listing</h1>
+    <br><br>
+    <form method="POST" action="/listing/<%=getdata.id%>?_method=PUT" class="needs-validation" novalidate>
+        <div class="row-cols-1">
+            <div class="col-8 offset-2">
+                <div class="mb-3">
+                    <label for="title" class="form-label">Title</label>
+                    <input type="text" name="listing[title]" id="title" value="<%= getdata.title %>"
+                        class="form-control" required>
+                        <div class="valid-feedback">
+                            look good..!
+                        </div>
                 </div>
-                <div class="mb-3 col-md-8">
-                    <label for="country" class="form-label">Country</label>
-                    <input type="text" name="listing[country]" id="country" value="<%= getdata.country %>" class="form-control">
+
+                <br>
+                <div class="mb-3">
+                    <label for="description" class="form-label">Description</label>
+                    <input type="text" name="listing[description]" id="description" value="<%= getdata.description %>"
+                        class="form-control" required>
+                        <div class="invalid-feedback">
+                            Please provide a valid description.
+                        </div>
                 </div>
+
+                <br>
+                <div class="mb-3">
+                    <label for="location" class="form-label">Location</label>
+                    <input type="text" name="listing[location]" id="location" value="<%= getdata.location %>"
+                        class="form-control" required>
+                        <div class="invalid-feedback">
+                            Please provide a valid location.
+                        </div>
+                </div>
+
+                <br>
+                <div class="row">
+                    <div class="mb-3 col-md-4">
+                        <label for="price" class="form-label">Price</label>
+                        <input type="number" name="listing[price]" id="price" value="<%= getdata.price %>"
+                            class="form-control" required>
+                            <div class="invalid-feedback">
+                                Please provide a valid price.
+                            </div>
+                    </div>
+                    <div class="mb-3 col-md-8">
+                        <label for="country" class="form-label">Country</label>
+                        <input type="text" name="listing[country]" id="country" value="<%= getdata.country %>"
+                            class="form-control" required>
+                            <div class="invalid-feedback">
+                                Please provide a valid country.
+                            </div>
+                    </div>
+                </div>
+
+                <br>
+                <div class="mb-3">
+                    <label for="image" class="form-label">Image</label>
+                    <input type="text" name="listing[image]" id="image" placeholder="enter your new Image url"
+                        class="form-control" required>
+                        <div class="invalid-feedback">
+                            Please provide a valid image url.
+                        </div>  
+
+
+                </div>
+
+                <br>
+                <button type="submit" class="btn btn-dark">Update</button>
+                <br>
+                <br>
             </div>
-            
-            <br>
-            <div class="mb-3">
-                <label for="image" class="form-label">Image</label>
-                <input type="text" name="listing[image]" id="image" placeholder="enter your new Image url" class="form-control">
-            </div>
-            
-            <br>
-            <button type="submit" class="btn btn-dark">Update</button>
-            <br>
-            <br>
         </div>
-    </div>
-</form>
+        
+    </form>
+    <!-- Remove this duplicate script tag -->
+    <!-- <script src="/ja/script.js"></script> -->
+    

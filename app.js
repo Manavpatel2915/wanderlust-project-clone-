@@ -6,6 +6,7 @@ const ejs = require("ejs");
 const path = require("path");
 const ejsmate = require("ejs-mate");
 const methodOverride = require("method-override");
+const WrapAsync = require("./utils/WarpAsync.js");
 
 
 // Set up ejs-mate as the engine first
@@ -70,18 +71,20 @@ app.get("/listing/:id", async(req, res) => {
 });
 
 //Add new Data 
-app.post("/listing",async(req,res)=>{
+app.post("/listing", WrapAsync(async(req,res,next)=>{
     
   
     const newlisting = new listing(req.body.listing);
     await newlisting.save();
    
     res.redirect("/listing");
-});
+
+   
+}));
 
 
 //update request route 
-app.get("/listing/:id/edit", async (req, res) => {
+app.get("/listing/:id/edit", WrapAsync(async (req, res) => {
    
     try {
         let {id} = req.params;
@@ -94,7 +97,7 @@ app.get("/listing/:id/edit", async (req, res) => {
         console.log(err);
         res.status(500).send("Error loading edit form");
     }
-});
+}));
 
 // update route 
 app.put("/listing/:id", (req,res)=>{
@@ -112,8 +115,13 @@ app.put("/listing/:id", (req,res)=>{
 
 // delete route 
 
-app.delete("/listing/:id",async(req,res)=>{
+app.delete("/listing/:id",WrapAsync(async(req,res)=>{
     let {id}= req.params;
    await listing.findByIdAndDelete(id);
     res.redirect("/listing");
-});
+}));
+
+app.use(( err,req,res,next)=>{
+    console.log(err);
+    res.status(500).send("Something went wrong");
+})

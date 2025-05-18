@@ -1,36 +1,57 @@
 <% layout("/layout/boilerplate") %>
-<h1 class="text"> Create new list </h1>
-<br><br>
-<form action="/listing" method="post">
-    <div class="row-cols-1">
+    <h1 class="text"> Create new list </h1>
+    <br><br>
+    <form action="/listing" method="post" novalidate class="needs-validation">
+        <div class="row-cols-1">
 
-   <div class="col-8  offset-2" >
-    <div class="mb-3">
-        <label for="title" class="form-label">Title</label>
-        <input type="text" name="listing[title]" id="title" placeholder="Enter the title" class="form-control">
-    </div>
-   
-    <br>
-    <div class="mb-3">
-        <label for="description" class="form-label">Description</label>
-    <input type="text" name="listing[description]" id="description" placeholder="write something about place" class="form-control">
-    </div>
-    <br>
-    <div class="mb-3">
-        <label for="location" class="form-label">Location</label>
-    <input type="text" name="listing[location]" id="location" placeholder="enter the location" class="form-control">
-    </div>
-    <br>
-    <div class="row">
-        <div class="mb-3 col-md-4">
-            <label for="price" class="form-label">Price</label>
-        <input type="number" name="listing[price]" id="price" placeholder="price enter here" class="form-control">
-        </div>
-        <div class="mb-3 col-md-8">
-            <label for="conutry" class="form-label" >Conutry</label>
-            <input type="text" name ="listing[conutry]" id="conutry" placeholder="enter your country name " class="form-control">
-           </div>
-    </div>
+            <div class="col-8  offset-2">
+                <div class="mb-3">
+                    <label for="title" class="form-label">Title</label>
+                    <input type="text" name="listing[title]" id="title" placeholder="Enter the title"
+                        class="form-control" required>
+                        <div class="valid-feedback">
+                            Looks good!
+                        </div>
+                </div>
+                
+
+                <br>
+                <div class="mb-3">
+                    <label for="description" class="form-label">Description</label>
+                    <input type="text" name="listing[description]" id="description"
+                        placeholder="write something about place" class="form-control" required>
+                        <div class="invalid-feedback">
+                            Please provide a valid description.
+                        </div>
+                </div>
+                <br>
+                <div class="mb-3">
+                    <label for="location" class="form-label">Location</label>
+                    <input type="text" name="listing[location]" id="location" placeholder="enter the location"
+                        class="form-control" required>
+                        <div class="invalid-feedback">
+                            Please provide a valid location.
+                        </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="mb-3 col-md-4">
+                        <label for="price" class="form-label">Price</label>
+                        <input type="number" name="listing[price]" id="price" placeholder="price enter here"
+                            class="form-control" required>
+                            <div class="invalid-feedback">
+                                Please provide a valid price.
+                            </div>
+                    </div>
+                    <div class="mb-3 col-md-8">
+                        <label for="conutry" class="form-label">Conutry</label>
+                        <input type="text" name="listing[conutry]" id="conutry" placeholder="enter your country name "
+                            class="form-control" required>
+                            <div class="invalid-feedback">
+                                Please provide a valid country.
+                            </div>
+                    </div>
+                </div>
     
     <br>
     <div class="mb-3">

@@ -6,10 +6,14 @@ const ejs = require("ejs");
 const path = require("path");
 const ejsmate = require("ejs-mate");
 const methodOverride = require("method-override");
-const WrapAsync = require("./utils/WarpAsync.js");
+const {listingSchema} = require("./scheme.js");
+
+const WarpAsync = require("./utils/WarpAsync.js");
 
 
-// Set up ejs-mate as the engine first
+// const ExpressError = require("./utils/ExpressError.js");
+
+
 app.engine('ejs', ejsmate);
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -42,7 +46,7 @@ app.get("/", (req, res) => {
 
 
 // listing all route
-app.get("/listing", async(req, res) => {
+app.get("/listing", WarpAsync(async(req, res) => {
     listing.find({})  
         .then((allListings) => {
             res.render("listing/index.ejs", {allListings});
@@ -51,7 +55,7 @@ app.get("/listing", async(req, res) => {
             console.log(err);
             res.status(500).send("Error fetching listings");
         });
-});
+}));
 
 // new route 
 app.get("/listing/new", (req, res) => {
@@ -59,7 +63,7 @@ app.get("/listing/new", (req, res) => {
 });
 
 //show route 
-app.get("/listing/:id", async(req, res) => {
+app.get("/listing/:id", WarpAsync(async(req, res) => {
     try {
         let {id} = req.params;
         let data = await listing.findById(id);
@@ -68,35 +72,31 @@ app.get("/listing/:id", async(req, res) => {
         console.log(err);
         res.status(500).send("Error loading listing");
     }
-});
+}));
 
 //Add new Data 
-app.post("/listing", WrapAsync(async(req,res,next)=>{
-    
-  
+app.post("/listing", WarpAsync(async(req, res, next) => {
+//    if(!req.body.listing){
+//         throw new ExpressError("invalid listing data", 400);    
+//    }
+    listingSchema.validate(req.body);
     const newlisting = new listing(req.body.listing);
     await newlisting.save();
-   
     res.redirect("/listing");
-
-   
 }));
 
 
 //update request route 
-app.get("/listing/:id/edit", WrapAsync(async (req, res) => {
+app.get("/listing/:id/edit", WarpAsync(async (req, res) => {
    
-    try {
+ 
         let {id} = req.params;
         const getdata = await listing.findById(id);
         if (!getdata) {
             return res.status(404).send("Listing not found");
         }
         res.render("listing/edit.ejs", { getdata });
-    } catch (err) {
-        console.log(err);
-        res.status(500).send("Error loading edit form");
-    }
+    
 }));
 
 // update route 
@@ -115,13 +115,18 @@ app.put("/listing/:id", (req,res)=>{
 
 // delete route 
 
-app.delete("/listing/:id",WrapAsync(async(req,res)=>{
+app.delete("/listing/:id",WarpAsync(async(req,res)=>{
     let {id}= req.params;
    await listing.findByIdAndDelete(id);
     res.redirect("/listing");
 }));
 
-app.use(( err,req,res,next)=>{
-    console.log(err);
-    res.status(500).send("Something went wrong");
-})
+// app.all("*",(req,res,next)=>{
+//     next(new ExpressError(404,"page not found")); // This is correct
+// });
+
+
+app.use((err, req, res, next) => {
+    const { statusCode = 500, message = "Something went wrong" } = err;
+    res.status(statusCode).render("error.ejs", { statusCode, message });
+});

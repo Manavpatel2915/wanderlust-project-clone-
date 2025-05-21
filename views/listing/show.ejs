@@ -7,7 +7,7 @@
       <div class="card-body">
         <h2 class="card-title"><%= data.title %></h2>
         <p class="card-text text-muted"><i class="fa-solid fa-location-dot"></i> <%= data.location %>, <%= data.country %></p>
-      </div>
+      </div> 
       <ul class="list-group list-group-flush">
         <li class="list-group-item">
           <p class="card-text"><%= data.description %></p>
@@ -22,8 +22,56 @@
         </form>
         <form method="POST" action="/listing/<%=data.id%>?_method=DELETE">
           <button type="submit" class="btn btn-danger">Delete</button>
+
         </form>
+  
       </div>
+      <hr>
+      <div class="col-8 offset-3 "  >
+      
+        <h4>Leave Review</h4>
+          <form action="/listing/<%=data.id%>/review" method="POST" novalidate class="needs-validation">
+            <div class="mb-3 mt-3">
+              <label for=" rating" class="form-label">Rating</label>
+              <input type="range" min="1" max="5" id="rating" name="review[rating]" class="form-range">
+            </div>
+            <div class="mb-3 mt-3">
+              <label for="comment" class="form-label">Give Comment Here</label>
+            <textarea name="review[Comment]" id="comment" cols="40" rows="10" placeholder="Enter the comment Here " class="form-control" required></textarea>
+            </div>
+            <div class="invalid-feedback">
+              Please Submit Some FeedBack 
+            </div>
+
+            </div>
+          
+            <button type="submit" class="btn btn-danger mb-3 mt-3">Review Here!</button>
+          </form> 
+
+          <hr>
+          <div>
+            <h4>All Reviews</h4>
+            <% if(data.review.length > 0) { %>
+              <% data.review.forEach(function(review) { %>
+                <div class="card mb-3">
+                  <div class="card-body">
+                    <h5 class="card-title">Rating: <%= review.rating %> ⭐</h5>
+                    <p class="card-text">Comment: <%= review.Comment %></p>
+                    <p class="card-subtitle text-muted">Submitted on: <%= review.CreateAt.toDateString() %></p>
+                    
+                    <!-- Add Delete Button Form -->
+                    <form action="/listing/<%= data._id %>/review/<%= review._id %>?_method=DELETE" method="POST" class="d-inline">
+                      <button class="btn btn-sm btn-danger">Delete</button>
+                    </form>
+                  </div>
+                </div>
+                <% }); %>
+              <% } else { %>
+                <p>No reviews yet. Be the first to leave a review!</p>
+              <% } %>
+            </div>
+      </div>
+
     </div>
   </div>
 </div>

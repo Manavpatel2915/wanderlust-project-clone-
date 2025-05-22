@@ -13,9 +13,8 @@ const listingSchema = Joi.object({
 module.exports = { listingSchema };
 
 module.exports.reviewSchema = Joi.object ({
-    review :Joi.object({
-        rating:Joi.number().required(),
-        comment : Joi.string().required()
-
+    review: Joi.object({
+        rating: Joi.number().required(),
+        Comment: Joi.string().required()  // Changed to uppercase to match model
     }).required()
 });

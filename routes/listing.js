@@ -16,15 +16,9 @@ const validatelisting = (req, res, next) => {
     }
 };
 // listing all route
-router.get("/", (req, res) => {
-    listing.find({})  
-        .then((allListings) => {
-            res.render("listing/index.ejs", {allListings});
-        })
-        .catch((err) => {
-            console.log(err);
-            res.status(500).send("Error fetching listings");
-        });
+router.get("/", async (req, res) => {
+    const listings = await listing.find({});
+    res.render("listing/index.ejs", { allListings: listings, success: req.flash("success") });
 });
 
 // new route 
@@ -47,17 +41,11 @@ router.get("/:id", WarpAsync(async(req, res) => {
 //Add new Data route
 
 router.post("/", WarpAsync(async(req, res, next) => {
-    // if(!req.body.listing){
-    //     new ExpressError(400, "Invalid listing data");    
-    // }
-   
-    const { error } = listingSchema.validate(req.body);
-    // if(error) {
-    //     throw new ExpressError(400, error.details.map(el => el.message).join(','));
-    // }
     const newlisting = new listing(req.body.listing);
 
-    await newlisting.save();    res.redirect("/listing");
+    await newlisting.save(); 
+    req.flash("success","New listing Created!"); // Corrected spelling
+    res.redirect("/listing");
 }));
 
 

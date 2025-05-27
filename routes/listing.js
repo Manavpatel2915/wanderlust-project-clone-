@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const listing = require("../models/listing.js");
-const WarpAsync = require("../utils/WarpAsync.js");
+const wrapAsync = require("../utils/wrapAsync.js");
 const ExpressError = require("../utils/ExpressError.js");
 const {listingSchema} = require("../scheme.js");
 
@@ -21,13 +21,13 @@ router.get("/", async (req, res) => {
     res.render("listing/index.ejs", { allListings: listings, success: req.flash("success") });
 });
 
-// new route 
+// new route
 router.get("/new", (req, res) => {
     res.render("listing/new.ejs"); 
 });
 
 //show route 
-router.get("/:id", WarpAsync(async(req, res) => {
+router.get("/:id", wrapAsync(async(req, res) => {
     try {
         let {id} = req.params;
         let data = await listing.findById(id).populate('review');
@@ -40,7 +40,8 @@ router.get("/:id", WarpAsync(async(req, res) => {
 
 //Add new Data route
 
-router.post("/", WarpAsync(async(req, res, next) => {
+// Post route
+router.post("/", wrapAsync(async(req, res, next) => {
     const newlisting = new listing(req.body.listing);
 
     await newlisting.save(); 
@@ -49,8 +50,8 @@ router.post("/", WarpAsync(async(req, res, next) => {
 }));
 
 
-//update request route 
-router.get("/:id/edit", WarpAsync(async (req, res) => {
+// Edit route
+router.get("/:id/edit", wrapAsync(async (req, res) => {
    
  
         let {id} = req.params;
@@ -62,19 +63,22 @@ router.get("/:id/edit", WarpAsync(async (req, res) => {
     
 }));
 
-// update route 
-router.put("/:id", validatelisting, WarpAsync(async(req, res) => {
+// Update route
+router.put("/:id", validatelisting, wrapAsync(async(req, res) => {
     let {id} = req.params;
     const updatedlisting = req.body.listing;
     await listing.findByIdAndUpdate(id, updatedlisting, {new: true});
+    res.locals.success = req.flash("success","updete listing done!");
     res.redirect(`/listing/${id}`);
 }));
 
-// delete route 
+// Delete route
 
-router.delete("/:id",WarpAsync(async(req,res)=>{
+// Delete route
+router.delete("/:id", wrapAsync(async(req, res) => {
     let {id}= req.params;
    await listing.findByIdAndDelete(id);
+   res.locals.success = req.flash(" success","sucessfully delete listing ");
     res.redirect("/listing");
 }));
 

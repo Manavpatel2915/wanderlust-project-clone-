@@ -7,35 +7,58 @@ const ejs = require("ejs");
 const path = require("path");
 const ejsmate = require("ejs-mate");
 const methodOverride = require("method-override");
+const passport = require("passport");
+const localStrategy = require("passport-local");
+const User = require("./models/user.js");
+const ejsMate = require('ejs-mate');
+
+// Import routes
+const userRoutes = require("./routes/user.js");
+const listings = require("./routes/listing.js");
 const reviews = require("./routes/review.js");
 
-const listings = require("./routes/listing.js");
-
-const sessionOptions = {
-    secret:"mysupersecretcode",
-    resave:false,
-    saveUninitialized :true,
-    cookie :{
-        expries : Date.now() + 7*24 *60 *60*1000,
-        maxAge :  7*24 *60 *60*1000,
-        httpOnly : true,
-    }
-}
-
-
+// Configure view engine
 app.engine('ejs', ejsmate);
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
-//  set up  middleware
+// Session configuration
+const sessionOptions = {
+    secret: "mysupersecretcode",
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+        httpOnly: true,
+    }
+}
+
+// Middleware setup - in correct order
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({extended: true}));
 app.use(methodOverride("_method"));
 app.use(session(sessionOptions));
 app.use(flash());
 
-// Add this line to mount the listing routes
+// Passport configuration
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new localStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+// Flash middleware - MUST be after session and flash initialization
+app.use((req, res, next) => {
+    res.locals.success = req.flash("success");
+    res.locals.error = req.flash("error");
+    next();
+});
+
+// Mount routes AFTER all middleware is set up
 app.use("/listing", listings);
+app.use("/listing/:id/review", reviews);
+app.use("/", userRoutes);
 
 //connect to wanderlust database
 let url = "mongodb://127.0.0.1:27017/wanderlust";
@@ -58,6 +81,18 @@ app.get("/", (req, res) => {
     res.send("this is wanderlust project");
 }); 
 
+// app.get("/demouser" , async(req,res)=>{
+//     let fakeuser = new User({
+//         email:"studnet@gmail.com",
+//         username:"student"
+//     });
+//   let newuser= await user.register(fakeuser,"student123");
+//     res.send(newuser);
+// });
+
+
+
+
 app.use((req,res,next)=>{
     // res.locals.currentUser = req.session.user;
     res.locals.success = req.flash("success");
@@ -66,14 +101,9 @@ app.use((req,res,next)=>{
 });
 
 app.use("/listing",listings);
-app.use("/listing/:id/review",reviews);
+app.use("/listing/:id/review", reviews);
+app.use("/", userRoutes);
 
-// Remove or comment out this duplicate route
-// app.get("/listing/:id",WarpAsync(async(req,res)=>{
-//     let {id} = req.params;
-//     const listing = await listing.findById(id).populate('review');
-//     res.render("listing/show.ejs",{listing});
-// }))
 
 
 // app.all("*",(req,res,next)=>{

@@ -5,6 +5,8 @@ const wrapAsync = require("../utils/wrapAsync.js");
 const ExpressError = require("../utils/ExpressError.js");
 const {listingSchema} = require("../scheme.js");
 
+const {isLoggedIn} = require("../middleware.js");
+
 
 const validatelisting = (req, res, next) => {
     let {error} = listingSchema.validate(req.body);
@@ -22,65 +24,127 @@ router.get("/", async (req, res) => {
 });
 
 // new route
-router.get("/new", (req, res) => {
+router.get("/new", isLoggedIn, (req, res) => {
     res.render("listing/new.ejs"); 
 });
 
-//show route 
-router.get("/:id", wrapAsync(async(req, res) => {
+
+// Show route
+router.get("/:id", wrapAsync(async(req, res) => {  
     try {
         let {id} = req.params;
-        let data = await listing.findById(id).populate('review');
+        let data = await listing.findById(id)
+            .populate('review')
+            .populate('owner');
+        
+        if (!data) {
+            req.flash("error", "Listing not found");
+            return res.redirect("/listing");
+        }
+        
+        // Safely log owner information if it exists
+        if (data.owner) {
+            console.log("Owner information:", {
+                ownerId: data.owner._id,
+                username: data.owner.username || "Not available",
+                email: data.owner.email || "Not available"
+            });
+        } else {
+            console.log("No owner information available for this listing");
+        }
+        
         res.render("listing/show.ejs", {data});
     } catch (err) {
         console.log(err);
-        res.status(500).send("Error loading listing");
+        req.flash("error", "Error loading listing");
+        res.redirect("/listing");
     }
 }));
 
-//Add new Data route
+
 
 // Post route
-router.post("/", wrapAsync(async(req, res, next) => {
+router.post("/", isLoggedIn, wrapAsync(async(req, res, next) => {
     const newlisting = new listing(req.body.listing);
-
+    newlisting.owner = req.user._id; // Set the current user as owner
     await newlisting.save(); 
-    req.flash("success","New listing Created!"); // Corrected spelling
+    req.flash("success","New listing Created!");
     res.redirect("/listing");
 }));
 
-
 // Edit route
-router.get("/:id/edit", wrapAsync(async (req, res) => {
-   
- 
-        let {id} = req.params;
-        const getdata = await listing.findById(id);
-        if (!getdata) {
-            return res.status(404).send("Listing not found");
-        }
-        res.render("listing/edit.ejs", { getdata });
+// Edit route
+router.get("/:id/edit", isLoggedIn, wrapAsync(async (req, res) => {
+    let {id} = req.params;
+    const getdata = await listing.findById(id);
     
+    // Check if listing exists
+    if (!getdata) {
+        req.flash("error", "Listing not found");
+        return res.redirect("/listing");
+    }
+    
+    // Check if current user is the owner
+    if (!getdata.owner.equals(req.user._id)) {
+        req.flash("error", "You don't have permission to edit this listing");
+        return res.redirect(`/listing/${id}`);
+    }
+    
+    res.render("listing/edit.ejs", { getdata });
 }));
 
 // Update route
-router.put("/:id", validatelisting, wrapAsync(async(req, res) => {
+// Update route
+router.put("/:id", isLoggedIn, validatelisting, wrapAsync(async(req, res) => {
     let {id} = req.params;
+    
+    // Find the listing first
+    const listingToUpdate = await listing.findById(id);
+    
+    // Check if listing exists
+    if (!listingToUpdate) {
+        req.flash("error", "Listing not found");
+        return res.redirect("/listing");
+    }
+    
+    // Check if current user is the owner
+    if (!listingToUpdate.owner.equals(req.user._id)) {
+        req.flash("error", "You don't have permission to update this listing");
+        return res.redirect(`/listing/${id}`);
+    }
+    
     const updatedlisting = req.body.listing;
     await listing.findByIdAndUpdate(id, updatedlisting, {new: true});
-    res.locals.success = req.flash("success","updete listing done!");
+    req.flash("success", "Update listing done!");
     res.redirect(`/listing/${id}`);
 }));
 
 // Delete route
-
-// Delete route
-router.delete("/:id", wrapAsync(async(req, res) => {
-    let {id}= req.params;
-   await listing.findByIdAndDelete(id);
-   res.locals.success = req.flash(" success","sucessfully delete listing ");
+router.delete("/:id", isLoggedIn, wrapAsync(async(req, res) => {
+    let {id} = req.params;
+    
+    // Find the listing first
+    const listingToDelete = await listing.findById(id);
+    
+    // Check if listing exists
+    if (!listingToDelete) {
+        req.flash("error", "Listing not found");
+        return res.redirect("/listing");
+    }
+    
+    // Check if current user is the owner
+    if (!listingToDelete.owner.equals(req.user._id)) {
+        req.flash("error", "You don't have permission to delete this listing");
+        return res.redirect(`/listing/${id}`);
+    }
+    
+    // If user is the owner, proceed with deletion
+    await listing.findByIdAndDelete(id);
+    req.flash("success", "Successfully deleted listing");
     res.redirect("/listing");
 }));
+
+
 
 
 module.exports = router;

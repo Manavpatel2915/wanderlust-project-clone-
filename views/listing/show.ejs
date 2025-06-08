@@ -8,6 +8,9 @@
         <h2 class="card-title"><%= data.title %></h2>
         <p class="card-text text-muted"><i class="fa-solid fa-location-dot"></i> <%= data.location %>, <%= data.country %></p>
       </div> 
+      <li class="list-group-item">
+        <p class="card-text"><i class="fa-solid fa-user"></i> Owned By: <%= data.owner.username %></p>
+      </li>
       <ul class="list-group list-group-flush">
         <li class="list-group-item">
           <p class="card-text"><%= data.description %></p>
@@ -16,6 +19,24 @@
           <p class="card-text fw-bold">₹<%= data.price.toLocaleString("en-IN") %> / night</p>
         </li>
       </ul>
+      
+      <!-- Debug information -->
+      <% if(locals.currentUser) { %>
+      <div class="card-body">
+        <p>Debug Info:</p>
+        <ul>
+          <li>Current User ID: <%= locals.currentUser._id %></li>
+          <li>Owner exists: <%= data.owner ? 'Yes' : 'No' %></li>
+          <% if(data.owner) { %>
+          <li>Owner ID: <%= data.owner._id %></li>
+          <li>IDs match: <%= data.owner._id.equals(locals.currentUser._id) ? 'Yes' : 'No' %></li>
+          <% } %>
+        </ul>
+      </div>
+      <% } %>
+      
+      <% if(locals.currentUser && data.owner && data.owner._id && data.owner._id.equals(locals.currentUser._id)) { %>
+      <hr>
       <div class="card-body d-flex">
         <form action="/listing/<%=data.id%>/edit" method="get" class="me-2">
           <button type="submit" class="btn btn-success">Edit</button>
@@ -26,6 +47,7 @@
         </form>
   
       </div>
+      <% } %>
       <hr>
       <div class="col-8 offset-3 "  >
       

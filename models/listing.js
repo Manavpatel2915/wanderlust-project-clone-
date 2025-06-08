@@ -20,6 +20,10 @@ const listingschema = new Schema({
         ref:"review"
     },
 ], 
+    owner:{
+        type:Schema.Types.ObjectId,
+        ref:"User"  // Change from "user" to "User" to match the model name
+    }
     
     
 });

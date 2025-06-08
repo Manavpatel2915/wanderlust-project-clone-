@@ -3,14 +3,12 @@ const app = express();
 const mongoose = require("mongoose");
 const session = require("express-session");
 const flash = require("connect-flash");
-const ejs = require("ejs"); 
 const path = require("path");
-const ejsmate = require("ejs-mate");
+const ejsMate = require("ejs-mate");
 const methodOverride = require("method-override");
 const passport = require("passport");
 const localStrategy = require("passport-local");
 const User = require("./models/user.js");
-const ejsMate = require('ejs-mate');
 
 // Import routes
 const userRoutes = require("./routes/user.js");
@@ -18,7 +16,8 @@ const listings = require("./routes/listing.js");
 const reviews = require("./routes/review.js");
 
 // Configure view engine
-app.engine('ejs', ejsmate);
+
+app.engine('ejs', ejsMate);
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
@@ -34,7 +33,7 @@ const sessionOptions = {
     }
 }
 
-// Middleware setup - in correct order
+// Middleware
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({extended: true}));
 app.use(methodOverride("_method"));
@@ -48,72 +47,40 @@ passport.use(new localStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-// Flash middleware - MUST be after session and flash initialization
+// Flash middleware
 app.use((req, res, next) => {
     res.locals.success = req.flash("success");
     res.locals.error = req.flash("error");
+    res.locals.currentUser = req.user;
     next();
 });
 
-// Mount routes AFTER all middleware is set up
+// Mount routes
 app.use("/listing", listings);
 app.use("/listing/:id/review", reviews);
 app.use("/", userRoutes);
 
-//connect to wanderlust database
+// Root route
+app.get("/", (req, res) => {
+    res.send("this is wanderlust project");
+});
+
+// Database connection
 let url = "mongodb://127.0.0.1:27017/wanderlust";
 
 async function main() {
     await mongoose.connect(url);
 }
- 
+
 main()
     .then(() => console.log("wanderlust connected successfully"))
     .catch((err) => {
         console.log(err);
     });
 
+// Start server
 app.listen(8080, () => {
     console.log("listening at port 8080");
-});
-
-app.get("/", (req, res) => {
-    res.send("this is wanderlust project");
-}); 
-
-// app.get("/demouser" , async(req,res)=>{
-//     let fakeuser = new User({
-//         email:"studnet@gmail.com",
-//         username:"student"
-//     });
-//   let newuser= await user.register(fakeuser,"student123");
-//     res.send(newuser);
-// });
-
-
-
-
-app.use((req,res,next)=>{
-    // res.locals.currentUser = req.session.user;
-    res.locals.success = req.flash("success");
-    // res.locals.error = req.flash("error");
-    next();
-});
-
-app.use("/listing",listings);
-app.use("/listing/:id/review", reviews);
-app.use("/", userRoutes);
-
-
-
-// app.all("*",(req,res,next)=>{
-//     next(new ExpressError(404,"page not found"));
-// });
-
-
-app.use((err, req, res, next) => {
-    const { statusCode = 500, message = "Something went wrong" } = err;
-    res.status(statusCode).render("listing/error", { error: message });
 });
 
 

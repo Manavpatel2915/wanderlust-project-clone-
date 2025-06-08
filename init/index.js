@@ -18,7 +18,9 @@ main()
 //fill data to wanderlust database 
 async function insertData() {
     await listing.deleteMany();
-    await listing.insertMany(data.data);
+  
+    const listingsWithOwner = data.data.map((obj) => ({...obj, owner: "652d0081ae547c5d37e56b5f"}));
+    await listing.insertMany(listingsWithOwner);
     console.log("data is inserted successfully!");
 }
 

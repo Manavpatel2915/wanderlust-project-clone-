@@ -1,6 +1,6 @@
 module.exports.isLoggedIn = (req,res,next)=>{
 if(!req.isAuthenticated()) {
-    req.session.redirectUrl = req.originalUrl; // Fixed typo: orignalUrl → originalUrl
+    req.session.redirectUrl = req.originalUrl; 
     req.flash("error", "You must be signed in!");
     return res.redirect("/login");
 } 
@@ -15,7 +15,21 @@ module.exports.saveredirecturl = (req,res,next)=>{
     next();
 }
 
-// Add this to your middleware.js file
+module.exports.isAuthor = async (req, res, next) => {
+    const { id, reviewId } = req.params;
+    const reviewDoc = await require("./models/review.js").findById(reviewId);
+
+    if (!reviewDoc) {
+        req.flash("error", "Review not found");
+        return res.redirect(`/listing/${id}`);
+    }
+
+    if (!reviewDoc.author.equals(req.user._id)) {
+        req.flash("error", "You don't have permission to modify this review");
+        return res.redirect(`/listing/${id}`);  
+    }
+    
+}
 module.exports.isOwner = async (req, res, next) => {
     const { id } = req.params;
     const listingDoc = await require("./models/listing.js").findById(id);

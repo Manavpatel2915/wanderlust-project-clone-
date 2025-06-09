@@ -35,7 +35,7 @@
       </div>
       <% } %>
       
-      <% if(locals.currentUser && data.owner && data.owner._id && data.owner._id.equals(locals.currentUser._id)) { %>
+      <%  if (currentUser && currentUser._id && data.owner && data.owner._id && currentUser._id.equals(data.owner._id)) { %>
       <hr>
       <div class="card-body d-flex">
         <form action="/listing/<%=data.id%>/edit" method="get" class="me-2">
@@ -50,7 +50,7 @@
       <% } %>
       <hr>
       <div class="col-8 offset-3 "  >
-      
+       <% if(currentUser)  {%>
         <h4>Leave Review</h4>
           <form action="/listing/<%=data.id%>/review" method="POST" novalidate class="needs-validation">
             <div class="mb-3 mt-3">
@@ -64,12 +64,12 @@
             <div class="invalid-feedback">
               Please Submit Some FeedBack 
             </div>
-
+          
             </div>
           
             <button type="submit" class="btn btn-danger mb-3 mt-3">Review Here!</button>
           </form> 
-
+          <%}%>
           <hr>
           <div>
             <h4>All Reviews</h4>
@@ -77,6 +77,7 @@
               <% data.review.forEach(function(review) { %>
                 <div class="card mb-3">
                   <div class="card-body">
+                    <h5 class="card-title">User: <%= review.author.username %></h5>  
                     <h5 class="card-title">Rating: <%= review.rating %> ⭐</h5>
                     <p class="card-text">Comment: <%= review.Comment %></p>
                     <p class="card-subtitle text-muted">Submitted on: <%= review.CreateAt.toDateString() %></p>

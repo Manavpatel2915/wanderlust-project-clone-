@@ -1,11 +1,11 @@
 const express = require("express");
 const router = express.Router({mergeParams: true});
 const listing = require("../models/listing.js");
-const wrapAsync = require("../utils/wrapAsync.js");  // Fixed import
+const wrapAsync = require("../utils/wrapAsync.js");  
 const ExpressError = require("../utils/ExpressError.js");
 const {reviewSchema} = require("../scheme.js");
 const review = require("../models/review.js");
-
+const {isLoggedIn, isReviewAuthor} = require("../middleware.js");
 const validateReview = (req, res, next) => {
     let {error} = reviewSchema.validate(req.body);
     if(error) {
@@ -16,10 +16,13 @@ const validateReview = (req, res, next) => {
     }
 };
 
-router.post("/", validateReview, wrapAsync(async(req,res) => {
+router.post("/",isLoggedIn, validateReview, wrapAsync(async(req,res) => {
     let id = await listing.findById(req.params.id);
     let newreview = new review(req.body.review);
+    newreview.author = req.user._id;
+    
     id.review.push(newreview);
+
     
     await newreview.save();
     await id.save();

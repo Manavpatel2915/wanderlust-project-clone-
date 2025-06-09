@@ -34,7 +34,7 @@ router.get("/:id", wrapAsync(async(req, res) => {
     try {
         let {id} = req.params;
         let data = await listing.findById(id)
-            .populate('review')
+            .populate({path:'review',populate:{path:'author'}})
             .populate('owner');
         
         if (!data) {
@@ -73,7 +73,6 @@ router.post("/", isLoggedIn, wrapAsync(async(req, res, next) => {
 }));
 
 // Edit route
-// Edit route
 router.get("/:id/edit", isLoggedIn, wrapAsync(async (req, res) => {
     let {id} = req.params;
     const getdata = await listing.findById(id);
@@ -93,7 +92,7 @@ router.get("/:id/edit", isLoggedIn, wrapAsync(async (req, res) => {
     res.render("listing/edit.ejs", { getdata });
 }));
 
-// Update route
+
 // Update route
 router.put("/:id", isLoggedIn, validatelisting, wrapAsync(async(req, res) => {
     let {id} = req.params;
